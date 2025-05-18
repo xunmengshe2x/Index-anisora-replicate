@@ -20,7 +20,7 @@ build:
     - "torch<=2.4.0"
     - "safetensors"
     - "einops"
-    - "pydantic==2.0"
+    - "pydantic==2.11.4"
     - "ray"
     - "protobuf"
     - "gdown"
