@@ -49,6 +49,4 @@ build:
     - "requests"
     - "huggingface_hub"
 
-predict:
-  gpu: true
-  cuda_memory: 16
+predict: "predict.py:Predictor"
