@@ -1,0 +1,39 @@
+g_config = {
+    "apikey":"tester",
+    "upload_boss":{
+        "endpoint":"http://jssz-boss.bilibili.co",
+        "inner_endpoint":"http://jssz-boss.bilibili.co",
+        "access_key":"5ftEC2PITYDlQSCK",
+        "secret_key":"zq2t4chmgOACcTqNAwmmkvDrEgSyth9Q",
+        "region_name":"jssz",
+        "region":"jssz",
+        "bucket":"algo3_aigc_public",
+    },
+    "model_boss": {
+        "endpoint":"http://jssz-boss.bilibili.co",
+        "inner_endpoint":"http://jssz-boss.bilibili.co",
+        "access_key":"Thchu1j3KcrHh2by",
+        "secret_key":"c7RRIq6OqFEs1lbCBkwndDOha49aFpln",
+        "region_name":"jssz",
+        "region":"jssz",
+        "bucket":"cv_data",
+    },
+    "cv_platform":{
+        "endpoint":"http://jssz-boss.bilibili.co",
+        "inner_endpoint":"http://jssz-boss.bilibili.co",
+        "access_key":"byfOpZzY4BVLYHez",
+        "secret_key":"1yZ4Y448WSUonBLkwrWj4LyylgC9SuAm",
+        "region_name":"jssz",
+        "region":"jssz",
+        "bucket":"cv_platform",
+    },
+    "danbooru2021":{
+        "endpoint":"http://shjd-inner-boss.bilibili.co",
+        "inner_endpoint":"http://shjd-inner-boss.bilibili.co",
+        "access_key":"2kPv8JpuEyWK0lIv",
+        "secret_key":"qb5GCB3AOND9B656vuBtog4cqzgZSqU4",
+        "region_name":"shjd",
+        "region":"shjd",
+        "bucket":"danbooru2021",
+    }
+}
