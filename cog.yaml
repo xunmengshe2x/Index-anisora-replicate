@@ -48,6 +48,7 @@ build:
     - "requests"
     - "huggingface_hub"
   run:
+    - pip uninstall -y pydantic
     # Restore pydantic version after cog's forced downgrade
     - pip install "pydantic>=2.10.3" --no-deps
 
