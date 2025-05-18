@@ -7,7 +7,6 @@ build:
     - "libgl1-mesa-glx"
     - "libglib2.0-0"
   python_packages:
-    - "pip uninstall -y pydantic deepspeed transformers"
     - "numpy"
     - "tqdm"
     - "psutil"
@@ -21,7 +20,6 @@ build:
     - "torch<=2.4.0"
     - "safetensors"
     - "einops"
-    - "pydantic>=2.0.0"
     - "ray"
     - "protobuf"
     - "gdown"
@@ -49,5 +47,8 @@ build:
     - "wget"
     - "requests"
     - "huggingface_hub"
+  run:
+    # Restore pydantic version after cog's forced downgrade
+    - pip install "pydantic>=2.10.3" --no-deps
 
 predict: "predict.py:Predictor"
