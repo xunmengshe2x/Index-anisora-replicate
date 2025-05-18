@@ -24,7 +24,7 @@ build:
     - "ray"
     - "protobuf"
     - "gdown"
-    - "pyav"
+    - "av"
     - "tensorboard"
     - "timm"
     - "matplotlib"
