@@ -17,7 +17,7 @@ class Output(BaseModel):
 
 class Predictor(BasePredictor):
     def setup(self):
-        """Load the model into memory to make running multiple predictions efficient""
+        """Load the model into memory to make running multiple predictions efficient"""
 
         # Create necessary directories
         os.makedirs("checkpoints", exist_ok=True)
@@ -75,7 +75,7 @@ class Predictor(BasePredictor):
             default=42
         )
     ) -> Output:
-        """Run a single prediction on the model""
+        """Run a single prediction on the model"""
 
         # Prepare parameters
         resource = [str(image)]
