@@ -31,7 +31,7 @@ class Predictor(BasePredictor):
             # Download VAE model
             vae_path = hf_hub_download(
                 repo_id="PixArt-alpha/pixart_sigma_sdxlvae_T5_diffusers",
-                filename="vae/diffusion_pytorch_model.safetensors",
+                filename="diffusion_pytorch_model.safetensors",
                 subfolder="vae"
             )
 
