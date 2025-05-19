@@ -12,7 +12,7 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
-from videosys import VideoSysEngine
+from .videosys import VideoSysEngine
 import os
 import math
 import argparse
