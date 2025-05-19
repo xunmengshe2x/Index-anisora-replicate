@@ -262,7 +262,7 @@ class CogVideoXConfig:
         pab_config=CogVideoXPABConfig(),
     ):
         self.model_path = model_path
-        self.pipeline_cls = CogVideoXPipeline
+        self.pipeline_cls = CogVideoXImageToVideoPipeline #CogVideoXPipeline
         # ======= distributed ========
         self.num_gpus = num_gpus
         # ======= memory ========
