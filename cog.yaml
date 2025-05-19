@@ -50,6 +50,6 @@ build:
     - "huggingface_hub"
     
   run:
-    - PYTHONPATH=$PYTHONPATH:/src/anisoraV1_infer
+    - PYTHONPATH=$PYTHONPATH:/src
 
 predict: "predict.py:Predictor"
