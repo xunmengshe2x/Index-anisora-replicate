@@ -1,16 +1,18 @@
 from cog import BasePredictor, Input, Path, BaseModel
 import torch
 import os
-import wget
+import sys
 from huggingface_hub import hf_hub_download
 from PIL import Image
-import sys
 import shutil
+from omegaconf import OmegaConf
 
 # Add the anisoraV1_infer directory to the path
 sys.path.append("anisoraV1_infer")
 
-from __init__ import CVModel
+from cogvideox.pipeline_cogvideox_image2video import CogVideoXImageToVideoPipeline
+from transformers import T5EncoderModel, T5Tokenizer
+from diffusers import AutoencoderKLCogVideoX
 
 class Output(BaseModel):
     video: Path
@@ -18,47 +20,51 @@ class Output(BaseModel):
 class Predictor(BasePredictor):
     def setup(self):
         """Load the model into memory to make running multiple predictions efficient"""
-
+        
         # Create necessary directories
         os.makedirs("checkpoints", exist_ok=True)
         os.makedirs("results", exist_ok=True)
 
-        # Download model weights from HuggingFace
-        # Based on repository links:
-        # 🤗 Hugging Face: https://huggingface.co/IndexTeam/Index-anisora
-
         try:
-            # Download VAE model
-            vae_path = hf_hub_download(
-                repo_id="PixArt-alpha/pixart_sigma_sdxlvae_T5_diffusers",
-                filename="diffusion_pytorch_model.safetensors",
-                subfolder="vae"
+            # Download model components from HuggingFace
+            model_id = "THUDM/CogVideoX-5b-I2V"
+            
+            # Download VAE
+            vae = AutoencoderKLCogVideoX.from_pretrained(
+                model_id,
+                subfolder="vae",
+                torch_dtype=torch.bfloat16
+            )
+            
+            # Download text encoder and tokenizer
+            tokenizer = T5Tokenizer.from_pretrained(
+                model_id,
+                subfolder="tokenizer"
+            )
+            
+            text_encoder = T5EncoderModel.from_pretrained(
+                model_id,
+                subfolder="text_encoder",
+                torch_dtype=torch.bfloat16
             )
 
-            # Download other required model files
-            # Note: Actual file names and paths would need to be extracted from the repository
-            model_files = [
-                "model.safetensors",
-                "config.json",
-                "tokenizer_config.json"
-            ]
+            # Download transformer
+            self.pipe = CogVideoXImageToVideoPipeline.from_pretrained(
+                model_id,
+                vae=vae,
+                text_encoder=text_encoder,
+                tokenizer=tokenizer,
+                torch_dtype=torch.bfloat16
+            )
 
-            for file in model_files:
-                if not os.path.exists(f"checkpoints/{file}"):
-                    hf_hub_download(
-                        repo_id="IndexTeam/Index-anisora",
-                        filename=file,
-                        local_dir="checkpoints"
-                    )
+            # Load config
+            self.config = OmegaConf.load("anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml")
+
+            # Move pipeline to GPU
+            self.pipe.to("cuda")
 
         except Exception as e:
             raise RuntimeError(f"Failed to download model files: {str(e)}")
-
-        # Initialize the model
-        try:
-            self.model = CVModel(n_gpus=1)
-        except Exception as e:
-            raise RuntimeError(f"Failed to initialize model: {str(e)}")
 
     def predict(
         self,
@@ -77,24 +83,33 @@ class Predictor(BasePredictor):
     ) -> Output:
         """Run a single prediction on the model"""
 
-        # Prepare parameters
-        resource = [str(image)]
-        raw_params = {
-            "Motion": motion_scale,
-            "gen_len": "3",
-            "prompt": prompt,
-            "seed": seed,
-            "output_path": "results/output.mp4"
-        }
-
         try:
+            # Set random seed
+            torch.manual_seed(seed)
+            
+            # Load and preprocess image
+            init_image = Image.open(str(image)).convert("RGB")
+            
             # Generate video
-            result = self.model.run(resource, **raw_params)
+            video_frames = self.pipe(
+                prompt=prompt,
+                image=init_image,
+                height=720,
+                width=1280,
+                num_inference_steps=50,
+                num_frames=13,
+                guidance_scale=6.0,
+                motion_scale=motion_scale
+            ).frames[0]
 
-            if not os.path.exists(raw_params["output_path"]):
+            # Save video
+            output_path = "results/output.mp4"
+            video_frames.save(output_path, fps=8)
+
+            if not os.path.exists(output_path):
                 raise RuntimeError("Video generation failed - output file not found")
 
-            return Output(video=Path(raw_params["output_path"]))
+            return Output(video=Path(output_path))
 
         except Exception as e:
             raise RuntimeError(f"Video generation failed: {str(e)}")
