@@ -5,7 +5,7 @@ from PIL import Image
 from io import BytesIO
 from huggingface_hub import hf_hub_download, snapshot_download
 from anisoraV1_infer import CVModel
-from fastercache.datasets.image_transform import center_crop_arr
+#from fastercache.datasets.image_transform import center_crop_arr
 
 REPO_ID = "IndexTeam/Index-anisora"
 T5_VAE_DIR = "CogVideoX_VAE_T5"
@@ -89,7 +89,7 @@ class Predictor:
                 image = image.convert('RGB')
 
             # Center crop and resize
-            image = center_crop_arr(image, target_size)
+            #image = center_crop_arr(image, target_size)
             
             # Save processed image to temporary file
             temp_path = f"/tmp/{os.path.basename(image_path)}"
