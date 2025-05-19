@@ -18,17 +18,17 @@ class Output(BaseModel):
     video: Path
 
 class Predictor(BasePredictor):
-    def setup(self):
-        """Load the model into memory to make running multiple predictions efficient"""
-        
-        # Create necessary directories
+   def setup(self):
+    """Load the model into memory to make running multiple predictions efficient"""
+    
+    # Create necessary directories
         os.makedirs("checkpoints", exist_ok=True)
         os.makedirs("results", exist_ok=True)
 
         try:
             # Download model components from HuggingFace
             model_id = "THUDM/CogVideoX-5b-I2V"
-            t5_model_id = "IndexTeam/Index-anisora"
+            t5_model_id = "IndexTeam/Index-anisora" # Changed to correct format
             
             # Download VAE
             vae = AutoencoderKLCogVideoX.from_pretrained(
@@ -39,16 +39,18 @@ class Predictor(BasePredictor):
             
             # Download custom text encoder and tokenizer
             tokenizer = T5Tokenizer.from_pretrained(
-                f"{t5_model_id}/CogVideoX_VAE_T5/t5-v1_1-xxl_new",
+                t5_model_id,
+                subfolder="CogVideoX_VAE_T5/t5-v1_1-xxl_new",  # Use subfolder parameter
                 use_fast=False
             )
             
             text_encoder = T5EncoderModel.from_pretrained(
-                f"{t5_model_id}/CogVideoX_VAE_T5/t5-v1_1-xxl_new",
+                t5_model_id,
+                subfolder="CogVideoX_VAE_T5/t5-v1_1-xxl_new",  # Use subfolder parameter
                 torch_dtype=torch.bfloat16,
                 use_safetensors=True
             )
-
+    
             # Download transformer
             self.pipe = CogVideoXImageToVideoPipeline.from_pretrained(
                 model_id,
@@ -57,13 +59,13 @@ class Predictor(BasePredictor):
                 tokenizer=tokenizer,
                 torch_dtype=torch.bfloat16
             )
-
+    
             # Load config
             self.config = OmegaConf.load("anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml")
-
+    
             # Move pipeline to GPU
             self.pipe.to("cuda")
-
+    
         except Exception as e:
             raise RuntimeError(f"Failed to download model files: {str(e)}")
 
