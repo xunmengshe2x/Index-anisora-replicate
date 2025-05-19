@@ -1,6 +1,6 @@
 import logging,time,re
-.from fastercache_sample_cogvideox_sp import Args
-.from videosys import VideoSysEngine
+from .fastercache_sample_cogvideox_sp import Args
+from .videosys import VideoSysEngine
 import pdb
 
 def append_score_to_prompts(prompt, aes=None, flow=None, camera_motion=None):
