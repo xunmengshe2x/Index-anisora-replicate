@@ -14,7 +14,7 @@ from multiprocessing import Queue
 from multiprocessing.connection import wait
 from typing import Any, Callable, Dict, Generic, List, Optional, TextIO, TypeVar, Union
 
-from videosys.utils.logging import create_logger
+from ...videosys.utils.logging import create_logger
 
 T = TypeVar("T")
 _TERMINATE = "TERMINATE"  # sentinel
