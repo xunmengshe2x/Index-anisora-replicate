@@ -28,6 +28,7 @@ class Predictor(BasePredictor):
         try:
             # Download model components from HuggingFace
             model_id = "THUDM/CogVideoX-5b-I2V"
+            t5_model_id = "IndexTeam/Index-anisora"
             
             # Download VAE
             vae = AutoencoderKLCogVideoX.from_pretrained(
@@ -36,16 +37,16 @@ class Predictor(BasePredictor):
                 torch_dtype=torch.bfloat16
             )
             
-            # Download text encoder and tokenizer
+            # Download custom text encoder and tokenizer
             tokenizer = T5Tokenizer.from_pretrained(
-                model_id,
-                subfolder="tokenizer"
+                f"{t5_model_id}/CogVideoX_VAE_T5/t5-v1_1-xxl_new",
+                use_fast=False
             )
             
             text_encoder = T5EncoderModel.from_pretrained(
-                model_id,
-                subfolder="text_encoder",
-                torch_dtype=torch.bfloat16
+                f"{t5_model_id}/CogVideoX_VAE_T5/t5-v1_1-xxl_new",
+                torch_dtype=torch.bfloat16,
+                use_safetensors=True
             )
 
             # Download transformer
