@@ -1,7 +1,7 @@
 import torch
 import torch.distributed as dist
 # from colossalai.cluster.process_group_mesh import ProcessGroupMesh
-from process_group_mesh import ProcessGroupMesh
+from ....process_group_mesh import ProcessGroupMesh
 from torch.distributed import ProcessGroup
 
 from videosys.utils.logging import init_dist_logger, logger
