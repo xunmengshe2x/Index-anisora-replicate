@@ -50,18 +50,18 @@ class Predictor(BasePredictor):
                 torch_dtype=torch.bfloat16,
                 use_safetensors=True
             )
-
+            self.config = OmegaConf.load("anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml")
             # Download transformer
             self.pipe = CogVideoXImageToVideoPipeline.from_pretrained(
                 model_id,
                 vae=vae,
                 text_encoder=text_encoder,
                 tokenizer=tokenizer,
-                torch_dtype=torch.bfloat16
+                torch_dtype=torch.bfloat16,
+                config=self.config
             )
 
             # Load config
-            self.config = OmegaConf.load("anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml")
 
             # Move pipeline to GPU
             self.pipe.to("cuda")
