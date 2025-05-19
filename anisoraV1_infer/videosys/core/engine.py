@@ -5,8 +5,7 @@ from typing import Any, Optional
 import torch
 import torch.distributed as dist
 
-import videosys
-
+from ... import videosys
 from .mp_utils import ProcessWorkerWrapper, ResultHandler, WorkerMonitor, get_distributed_init_method, get_open_port
 
 
