@@ -48,5 +48,8 @@ build:
     - "wget"
     - "requests"
     - "huggingface_hub"
+    
+  run:
+    - PYTHONPATH=$PYTHONPATH:/src/anisoraV1_infer
 
 predict: "predict.py:Predictor"
