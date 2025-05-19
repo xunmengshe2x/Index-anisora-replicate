@@ -54,20 +54,22 @@ class Predictor(BasePredictor):
             #self.config = OmegaConf.load("anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml")
 
             #from cogvideox.pipeline_cogvideox_image2video import CogVideoXConfig
+            '''
             config = CogVideoXConfig(
                 model_path=model_id,
                 num_gpus=1,  # Adjust based on your setup
                 cpu_offload=False,
                 vae_tiling=True
             )
+            '''
             # Download transformer
             self.pipe = CogVideoXImageToVideoPipeline.from_pretrained(
                 model_id,
                 vae=vae,
                 text_encoder=text_encoder,
                 tokenizer=tokenizer,
-                torch_dtype=torch.bfloat16,
-                config=config
+                torch_dtype=torch.bfloat16
+                #config=config
             )
 
             # Load config
