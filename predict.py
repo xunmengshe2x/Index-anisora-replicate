@@ -18,10 +18,10 @@ class Output(BaseModel):
     video: Path
 
 class Predictor(BasePredictor):
-   def setup(self):
-    """Load the model into memory to make running multiple predictions efficient"""
-    
-    # Create necessary directories
+    def setup(self):
+        """Load the model into memory to make running multiple predictions efficient"""
+        
+        # Create necessary directories
         os.makedirs("checkpoints", exist_ok=True)
         os.makedirs("results", exist_ok=True)
 
@@ -50,7 +50,7 @@ class Predictor(BasePredictor):
                 torch_dtype=torch.bfloat16,
                 use_safetensors=True
             )
-    
+
             # Download transformer
             self.pipe = CogVideoXImageToVideoPipeline.from_pretrained(
                 model_id,
@@ -59,13 +59,13 @@ class Predictor(BasePredictor):
                 tokenizer=tokenizer,
                 torch_dtype=torch.bfloat16
             )
-    
+
             # Load config
             self.config = OmegaConf.load("anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml")
-    
+
             # Move pipeline to GPU
             self.pipe.to("cuda")
-    
+
         except Exception as e:
             raise RuntimeError(f"Failed to download model files: {str(e)}")
 
