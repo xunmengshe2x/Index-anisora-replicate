@@ -1,7 +1,11 @@
 import os
 import torch
+import requests
+from PIL import Image
+from io import BytesIO
 from huggingface_hub import hf_hub_download, snapshot_download
 from anisoraV1_infer import CVModel
+from fastercache.datasets.image_transform import center_crop_arr
 
 REPO_ID = "IndexTeam/Index-anisora"
 T5_VAE_DIR = "CogVideoX_VAE_T5"
@@ -70,6 +74,32 @@ class Predictor:
         except Exception as e:
             raise RuntimeError(f"Failed to download 5B model weights: {str(e)}")
 
+    def _process_image(self, image_path: str, target_size: int = 720) -> str:
+        """Process input image - either URL or local path"""
+        try:
+            # Handle URL inputs
+            if image_path.startswith(('http://', 'https://')):
+                response = requests.get(image_path)
+                image = Image.open(BytesIO(response.content))
+            else:
+                image = Image.open(image_path)
+
+            # Convert to RGB if necessary
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+
+            # Center crop and resize
+            image = center_crop_arr(image, target_size)
+            
+            # Save processed image to temporary file
+            temp_path = f"/tmp/{os.path.basename(image_path)}"
+            image.save(temp_path)
+            
+            return temp_path
+
+        except Exception as e:
+            raise RuntimeError(f"Failed to process image {image_path}: {str(e)}")
+
     def predict(
         self,
         prompt: str,
@@ -82,28 +112,48 @@ class Predictor:
     ) -> str:
         """Run a single prediction on the model"""
         
-        # Handle input images
-        resource = [input_image]
-        if input_image_mid:
-            resource.append(input_image_mid)
-        if input_image_last:
-            resource.append(input_image_last)
-        
-        # If only one image provided, use it for all frames
-        while len(resource) < 3:
-            resource.append(resource[0])
-
-        raw_params = {
-            "Motion": motion,
-            "gen_len": gen_len,
-            "prompt": prompt,
-            "seed": seed,
-            "output_path": "/tmp/output.mp4"
-        }
-
-        # Run inference
         try:
+            # Process input images
+            resource = [self._process_image(input_image)]
+            
+            if input_image_mid:
+                resource.append(self._process_image(input_image_mid))
+            if input_image_last:
+                resource.append(self._process_image(input_image_last))
+            
+            # If only one image provided, use it for all frames
+            while len(resource) < 3:
+                resource.append(resource[0])
+
+            # Prepare output path
+            output_path = "/tmp/output.mp4"
+            
+            # Set up parameters
+            raw_params = {
+                "Motion": motion,
+                "gen_len": gen_len,
+                "prompt": prompt,
+                "seed": seed,
+                "output_path": output_path
+            }
+
+            # Run inference
             result = self.model.run(resource, **raw_params)
-            return result
+            
+            # Verify output exists
+            if not os.path.exists(output_path):
+                raise RuntimeError("Output video was not generated")
+                
+            return output_path
+
         except Exception as e:
-            raise RuntimeError(f"Inference failed: {str(e)}")
+            raise RuntimeError(f"Prediction failed: {str(e)}")
+
+    def cleanup(self):
+        """Clean up temporary files"""
+        try:
+            for file in os.listdir("/tmp"):
+                if file.endswith((".jpg", ".png", ".mp4")):
+                    os.remove(os.path.join("/tmp", file))
+        except Exception as e:
+            print(f"Warning: Failed to cleanup temporary files: {str(e)}")
