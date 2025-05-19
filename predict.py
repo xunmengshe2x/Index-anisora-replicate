@@ -10,7 +10,8 @@ from omegaconf import OmegaConf
 # Add the anisoraV1_infer directory to the path
 sys.path.append("anisoraV1_infer")
 
-from cogvideox.pipeline_cogvideox_image2video import CogVideoXImageToVideoPipeline
+
+from cogvideox.pipeline_cogvideox_image2video import CogVideoXConfig, CogVideoXImageToVideoPipeline
 from transformers import T5EncoderModel, T5Tokenizer
 from diffusers import AutoencoderKLCogVideoX
 
@@ -52,7 +53,7 @@ class Predictor(BasePredictor):
             )
             #self.config = OmegaConf.load("anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml")
 
-            from cogvideox.pipeline_cogvideox_image2video import CogVideoXConfig
+            #from cogvideox.pipeline_cogvideox_image2video import CogVideoXConfig
             config = CogVideoXConfig(
                 model_path=model_id,
                 num_gpus=1,  # Adjust based on your setup
