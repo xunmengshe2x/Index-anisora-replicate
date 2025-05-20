@@ -20,9 +20,9 @@ import torch.nn as nn
 
 from diffusers.configuration_utils import ConfigMixin, register_to_config
 from diffusers.loaders import FromOriginalModelMixin, PeftAdapterMixin
-from fastercache.models.vchitect.blocks import JointTransformerBlock
+from ....fastercache.models.vchitect.blocks import JointTransformerBlock
 # from diffusers.models.attention_processor import Attention, AttentionProcessor
-from fastercache.models.vchitect.attention import Attention, AttentionProcessor
+from ....fastercache.models.vchitect.attention import Attention, AttentionProcessor
 from diffusers.models.modeling_utils import ModelMixin
 from diffusers.models.normalization import AdaLayerNormContinuous
 from diffusers.utils import USE_PEFT_BACKEND, is_torch_version, logging, scale_lora_layers, unscale_lora_layers

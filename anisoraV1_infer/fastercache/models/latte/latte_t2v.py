@@ -32,7 +32,7 @@ from diffusers.utils.torch_utils import maybe_allow_in_graph
 from einops import rearrange, repeat
 from torch import nn
 
-from fastercache.dsp.comm import (
+from ....fastercache.dsp.comm import (
     all_to_all_with_pad,
     gather_sequence,
     get_spatial_pad,
@@ -41,8 +41,8 @@ from fastercache.dsp.comm import (
     set_temporal_pad,
     split_sequence,
 )
-from fastercache.dsp.pab_mgr import enable_pab, if_broadcast_cross, if_broadcast_spatial, if_broadcast_temporal
-from fastercache.dsp.parallel_mgr import enable_sequence_parallel, get_sequence_parallel_group
+from ....fastercache.dsp.pab_mgr import enable_pab, if_broadcast_cross, if_broadcast_spatial, if_broadcast_temporal
+from ....fastercache.dsp.parallel_mgr import enable_sequence_parallel, get_sequence_parallel_group
 
 
 @maybe_allow_in_graph

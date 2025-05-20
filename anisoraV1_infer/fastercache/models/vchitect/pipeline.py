@@ -21,8 +21,8 @@ from transformers import (
     CLIPTokenizer,
     T5TokenizerFast,
 )
-from fastercache.models.vchitect.modeling_t5 import T5EncoderModel
-from fastercache.models.vchitect.VchitectXL import VchitectXLTransformerModel
+from ....fastercache.models.vchitect.modeling_t5 import T5EncoderModel
+from ....fastercache.models.vchitect.VchitectXL import VchitectXLTransformerModel
 from transformers import AutoTokenizer, PretrainedConfig, CLIPTextModel, CLIPTextModelWithProjection
 from diffusers.image_processor import VaeImageProcessor
 from diffusers.loaders import FromSingleFileMixin, SD3LoraLoaderMixin

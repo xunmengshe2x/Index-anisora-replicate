@@ -219,7 +219,7 @@ def initialize_distributed(args):
     mpu.initialize_model_parallel(args.model_parallel_size)
 
     # Set vae context parallel group equal to model parallel group
-    from fastercache.models.cogvideox.sgm.util import set_context_parallel_group, initialize_context_parallel
+    from ....fastercache.models.cogvideox.sgm.util import set_context_parallel_group, initialize_context_parallel
 
     if args.model_parallel_size <= 2:
         set_context_parallel_group(args.model_parallel_size, mpu.get_model_parallel_group())

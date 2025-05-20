@@ -14,8 +14,8 @@ import torch.nn as nn
 from einops import rearrange
 from packaging import version
 
-from fastercache.models.cogvideox.vae_modules.ema import LitEma
-from fastercache.models.cogvideox.sgm.util import (
+from .....fastercache.models.cogvideox.vae_modules.ema import LitEma
+from .....fastercache.models.cogvideox.sgm.util import (
     instantiate_from_config, 
     get_obj_from_str,
     default,
@@ -24,7 +24,7 @@ from fastercache.models.cogvideox.sgm.util import (
     get_context_parallel_group,
     get_context_parallel_group_rank,
 )
-from fastercache.models.cogvideox.vae_modules.cp_enc_dec import _conv_split, _conv_gather
+from .....fastercache.models.cogvideox.vae_modules.cp_enc_dec import _conv_split, _conv_gather
 
 logpy = logging.getLogger(__name__)
 

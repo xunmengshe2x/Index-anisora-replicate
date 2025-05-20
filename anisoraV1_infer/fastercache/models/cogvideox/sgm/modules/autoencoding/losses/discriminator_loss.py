@@ -221,7 +221,7 @@ class GeneralLPIPSWithDiscriminator(nn.Module):
         if self.perceptual_weight > 0:
             frame_indices = torch.randn((inputs.shape[0], inputs.shape[2])).topk(1, dim=-1).indices
 
-            from fastercache.models.cogvideox.sgm.modules.autoencoding.losses.video_loss import pick_video_frame
+            from ........fastercache.models.cogvideox.sgm.modules.autoencoding.losses.video_loss import pick_video_frame
 
             input_frames = pick_video_frame(inputs, frame_indices)
             recon_frames = pick_video_frame(reconstructions, frame_indices)

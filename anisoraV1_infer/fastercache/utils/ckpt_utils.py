@@ -13,7 +13,7 @@ from colossalai.cluster import DistCoordinator
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
 
-from fastercache.dsp.comm import model_sharding
+from ...fastercache.dsp.comm import model_sharding
 
 
 def load_json(file_path: str):

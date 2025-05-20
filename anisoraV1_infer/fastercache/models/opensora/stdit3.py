@@ -33,7 +33,7 @@ from .modules import (
 )
 from .utils import auto_grad_checkpoint, load_checkpoint
 
-from fastercache.dsp.comm import (
+from ....fastercache.dsp.comm import (
     all_to_all_with_pad,
     gather_sequence,
     get_spatial_pad,
@@ -42,7 +42,7 @@ from fastercache.dsp.comm import (
     set_temporal_pad,
     split_sequence,
 )
-from fastercache.dsp.parallel_mgr import enable_sequence_parallel, get_sequence_parallel_group
+from ....fastercache.dsp.parallel_mgr import enable_sequence_parallel, get_sequence_parallel_group
 
 
 class STDiT3Block(nn.Module):

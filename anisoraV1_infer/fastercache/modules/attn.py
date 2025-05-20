@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.checkpoint
 
-from fastercache.modules.layers import LlamaRMSNorm
+from ...fastercache.modules.layers import LlamaRMSNorm
 
 
 class Attention(nn.Module):

@@ -152,8 +152,8 @@ class T5Encoder:
     def shardformer_t5(self):
         from colossalai.shardformer import ShardConfig, ShardFormer
 
-        from fastercache.dsp.shardformer.t5.policy import T5EncoderPolicy
-        from fastercache.utils.utils import requires_grad
+        from ....fastercache.dsp.shardformer.t5.policy import T5EncoderPolicy
+        from ....fastercache.utils.utils import requires_grad
 
         shard_config = ShardConfig(
             tensor_parallel_process_group=None,

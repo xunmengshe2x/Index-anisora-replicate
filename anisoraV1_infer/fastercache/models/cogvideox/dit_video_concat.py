@@ -10,10 +10,10 @@ from sat.model.base_model import BaseModel, non_conflict
 from sat.model.mixins import BaseMixin
 from sat.transformer_defaults import HOOKS_DEFAULT, attention_fn_default
 from sat.mpu.layers import ColumnParallelLinear
-from fastercache.models.cogvideox.sgm.util import instantiate_from_config
+from ....fastercache.models.cogvideox.sgm.util import instantiate_from_config
 
-from fastercache.models.cogvideox.sgm.modules.diffusionmodules.openaimodel import Timestep
-from fastercache.models.cogvideox.sgm.modules.diffusionmodules.util import (
+from ....fastercache.models.cogvideox.sgm.modules.diffusionmodules.openaimodel import Timestep
+from ....fastercache.models.cogvideox.sgm.modules.diffusionmodules.util import (
     linear,
     timestep_embedding,
 )

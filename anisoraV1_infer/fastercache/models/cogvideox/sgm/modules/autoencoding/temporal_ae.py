@@ -3,16 +3,16 @@ from typing import Callable, Iterable, Union
 import torch
 from einops import rearrange, repeat
 
-from fastercache.models.cogvideox.sgm.modules.diffusionmodules.model import (
+from .......fastercache.models.cogvideox.sgm.modules.diffusionmodules.model import (
     XFORMERS_IS_AVAILABLE,
     AttnBlock,
     Decoder,
     MemoryEfficientAttnBlock,
     ResnetBlock,
 )
-from fastercache.models.cogvideox.sgm.modules.diffusionmodules.openaimodel import ResBlock, timestep_embedding
-from fastercache.models.cogvideox.sgm.modules.video_attention import VideoTransformerBlock
-from fastercache.models.cogvideox.sgm.util import partialclass
+from .......fastercache.models.cogvideox.sgm.modules.diffusionmodules.openaimodel import ResBlock, timestep_embedding
+from .......fastercache.models.cogvideox.sgm.modules.video_attention import VideoTransformerBlock
+from .......fastercache.models.cogvideox.sgm.util import partialclass
 
 
 class VideoResBlock(ResnetBlock):

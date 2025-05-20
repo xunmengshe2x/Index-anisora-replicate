@@ -9,10 +9,10 @@ from beartype import beartype
 from beartype.typing import Union, Tuple, Optional, List
 from einops import rearrange
 
-from fastercache.models.cogvideox.sgm.util import get_context_parallel_group, get_context_parallel_rank, get_context_parallel_world_size, get_context_parallel_group_rank
+from .....fastercache.models.cogvideox.sgm.util import get_context_parallel_group, get_context_parallel_rank, get_context_parallel_world_size, get_context_parallel_group_rank
 
 # try:
-from fastercache.models.cogvideox.vae_modules.utils import SafeConv3d as Conv3d
+from .....fastercache.models.cogvideox.vae_modules.utils import SafeConv3d as Conv3d
 # except:
 #     # Degrade to normal Conv3d if SafeConv3d is not available
 #     from torch.nn import Conv3d

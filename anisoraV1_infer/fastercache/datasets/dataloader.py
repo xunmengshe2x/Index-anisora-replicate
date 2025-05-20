@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset, DistributedSampler
 from torch.utils.data.distributed import DistributedSampler
 
-from fastercache.core.parallel_mgr import ParallelManager
+from ...fastercache.core.parallel_mgr import ParallelManager
 
 
 class StatefulDistributedSampler(DistributedSampler):

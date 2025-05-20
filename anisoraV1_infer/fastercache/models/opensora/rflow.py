@@ -13,7 +13,7 @@ from einops import rearrange
 from torch.distributions import LogisticNormal
 from tqdm import tqdm
 
-from fastercache.diffusion.gaussian_diffusion import _extract_into_tensor
+from ....fastercache.diffusion.gaussian_diffusion import _extract_into_tensor
 
 
 def mean_flat(tensor: torch.Tensor, mask=None):

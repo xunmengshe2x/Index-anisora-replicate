@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
-Script to automatically convert absolute 'videosys' imports to relative imports
+Script to automatically convert absolute internal imports to relative imports
 throughout the codebase.
 
-This script scans Python files for imports starting with 'from videosys' and
-converts them to relative imports based on the file's location in the package
-structure.
+This script scans Python files for imports starting with 'from videosys', 'from fastercache', etc.
+and converts them to relative imports based on the file's location in the package structure.
 """
 
 import os
@@ -13,21 +12,25 @@ import re
 import sys
 from pathlib import Path
 
+# List of internal modules to convert from absolute to relative imports
+INTERNAL_MODULES = ['videosys', 'fastercache', 'anisoraV1_infer']
+
 def count_parent_dirs(file_path, base_dir):
     """Count how many parent directories to go up for relative imports"""
     rel_path = os.path.relpath(file_path, base_dir)
     return len(rel_path.split(os.sep)) - 1
 
-def convert_to_relative_import(import_line, parent_count):
+def convert_to_relative_import(import_line, parent_count, module_name):
     """Convert an absolute import to a relative import"""
-    # Extract the module path after 'videosys'
-    match = re.match(r'from\s+videosys(\..+)\s+import\s+(.+)', import_line)
+    # Extract the module path after the module name
+    pattern = fr'from\s+{module_name}(\..+)\s+import\s+(.+)'
+    match = re.match(pattern, import_line)
     if match:
         module_path, imports = match.groups()
         # Create the relative import prefix with appropriate number of dots
         relative_prefix = '.' * parent_count
         # Construct the new relative import line
-        return f'from {relative_prefix}videosys{module_path} import {imports}'
+        return f'from {relative_prefix}{module_name}{module_path} import {imports}'
     return import_line
 
 def process_file(file_path, base_dir):
@@ -46,17 +49,26 @@ def process_file(file_path, base_dir):
             print(f"Error reading {file_path}: {e}")
             return False, 0
     
-    # Find all 'from videosys' imports
-    pattern = r'from\s+videosys\..+\s+import\s+.+'
-    matches = re.findall(pattern, content)
+    total_matches = 0
+    modified = False
     
-    if not matches:
+    # Process each internal module
+    for module in INTERNAL_MODULES:
+        # Find all imports for this module
+        pattern = fr'from\s+{module}\..+\s+import\s+.+'
+        matches = re.findall(pattern, content)
+        
+        if matches:
+            modified = True
+            total_matches += len(matches)
+            
+            # Replace each absolute import with its relative equivalent
+            for match in matches:
+                relative_import = convert_to_relative_import(match, parent_count, module)
+                content = content.replace(match, relative_import)
+    
+    if not modified:
         return False, 0
-    
-    # Replace each absolute import with its relative equivalent
-    for match in matches:
-        relative_import = convert_to_relative_import(match, parent_count)
-        content = content.replace(match, relative_import)
     
     # Write the modified content back to the file
     try:
@@ -67,7 +79,7 @@ def process_file(file_path, base_dir):
         with open(file_path, 'w', encoding='latin-1') as f:
             f.write(content)
     
-    return True, len(matches)
+    return True, total_matches
 
 def main():
     if len(sys.argv) < 2:

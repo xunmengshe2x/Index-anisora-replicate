@@ -18,8 +18,8 @@ from kornia.filters import filter3d
 from ..magvit2_pytorch import Residual, FeedForward, LinearSpaceAttention
 from .lpips import LPIPS
 
-from fastercache.models.cogvideox.sgm.modules.autoencoding.vqvae.movq_enc_3d import CausalConv3d, DownSample3D
-from fastercache.models.cogvideox.sgm.util import instantiate_from_config
+from ........fastercache.models.cogvideox.sgm.modules.autoencoding.vqvae.movq_enc_3d import CausalConv3d, DownSample3D
+from ........fastercache.models.cogvideox.sgm.util import instantiate_from_config
 
 
 def exists(v):

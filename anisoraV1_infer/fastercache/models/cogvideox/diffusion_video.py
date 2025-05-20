@@ -9,10 +9,10 @@ from sat.helpers import print_rank0
 import torch
 from torch import nn
 
-from fastercache.models.cogvideox.sgm.modules import UNCONDITIONAL_CONFIG
-from fastercache.models.cogvideox.sgm.modules.autoencoding.temporal_ae import VideoDecoder
-from fastercache.models.cogvideox.sgm.modules.diffusionmodules.wrappers import OPENAIUNETWRAPPER
-from fastercache.models.cogvideox.sgm.util import (
+from ....fastercache.models.cogvideox.sgm.modules import UNCONDITIONAL_CONFIG
+from ....fastercache.models.cogvideox.sgm.modules.autoencoding.temporal_ae import VideoDecoder
+from ....fastercache.models.cogvideox.sgm.modules.diffusionmodules.wrappers import OPENAIUNETWRAPPER
+from ....fastercache.models.cogvideox.sgm.util import (
     default,
     disabled_train,
     get_obj_from_str,

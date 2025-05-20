@@ -16,7 +16,7 @@ from colossalai.checkpoint_io import GeneralCheckpointIO
 from torch.utils.checkpoint import checkpoint, checkpoint_sequential
 from torchvision.datasets.utils import download_url
 
-from fastercache.utils.utils import get_logger
+from ....fastercache.utils.utils import get_logger
 
 hf_endpoint = os.environ.get("HF_ENDPOINT")
 if hf_endpoint is None:

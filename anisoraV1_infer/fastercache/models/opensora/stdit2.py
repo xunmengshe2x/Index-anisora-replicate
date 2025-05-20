@@ -19,17 +19,17 @@ from timm.models.layers import DropPath
 from timm.models.vision_transformer import Mlp
 from transformers import PretrainedConfig, PreTrainedModel
 
-from fastercache.dsp.comm import all_to_all_comm, gather_sequence, split_sequence
-from fastercache.dsp.parallel_mgr import (
+from ....fastercache.dsp.comm import all_to_all_comm, gather_sequence, split_sequence
+from ....fastercache.dsp.parallel_mgr import (
     get_sequence_parallel_group,
     get_sequence_parallel_size,
     is_sequence_parallelism_enable,
 )
-from fastercache.models.opensora.ckpt_io import load_checkpoint
-from fastercache.models.opensora.embed import CaptionEmbedder, PatchEmbed3D, TimestepEmbedder, get_2d_sincos_pos_embed
-from fastercache.models.opensora.stdit import approx_gelu, t2i_modulate
-from fastercache.modules.attn import Attention, MultiHeadCrossAttention
-from fastercache.modules.layers import get_layernorm
+from ....fastercache.models.opensora.ckpt_io import load_checkpoint
+from ....fastercache.models.opensora.embed import CaptionEmbedder, PatchEmbed3D, TimestepEmbedder, get_2d_sincos_pos_embed
+from ....fastercache.models.opensora.stdit import approx_gelu, t2i_modulate
+from ....fastercache.modules.attn import Attention, MultiHeadCrossAttention
+from ....fastercache.modules.layers import get_layernorm
 
 
 class PositionEmbedding2D(nn.Module):

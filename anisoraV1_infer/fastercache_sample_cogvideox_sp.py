@@ -30,13 +30,12 @@ from sat.model.base_model import get_model
 from sat.training.model_io import load_checkpoint
 from sat import mpu
 
-from fastercache.models.cogvideox.diffusion_video import SATVideoDiffusionEngine
-from fastercache.models.cogvideox.arguments import get_args
+from .fastercache.models.cogvideox.diffusion_video import SATVideoDiffusionEngine
+from .fastercache.models.cogvideox.arguments import get_args
 from torchvision.transforms.functional import center_crop, resize
 from torchvision.transforms import InterpolationMode
-from fastercache.utils.utils import init_process_groups, all_to_all, sp_split, sp_gather
-from fastercache.models.cogvideox.sgm.util import initialize_context_parallel
-import torch.distributed as dist
+from .fastercache.utils.utils import init_process_groups, all_to_all, sp_split, sp_gather
+from .fastercache.models.cogvideox.sgm.util import initialize_context_parallel import torch.distributed as dist
 
 from torchvision.transforms.functional import center_crop, resize
 from torchvision.transforms import InterpolationMode
@@ -150,10 +149,10 @@ from sat.model.base_model import BaseModel, non_conflict
 from sat.model.mixins import BaseMixin
 from sat.transformer_defaults import HOOKS_DEFAULT, attention_fn_default
 from sat.mpu.layers import ColumnParallelLinear
-from fastercache.models.cogvideox.sgm.util import instantiate_from_config
+from .fastercache.models.cogvideox.sgm.util import instantiate_from_config
 
-from fastercache.models.cogvideox.sgm.modules.diffusionmodules.openaimodel import Timestep
-from fastercache.models.cogvideox.sgm.modules.diffusionmodules.util import (
+from .fastercache.models.cogvideox.sgm.modules.diffusionmodules.openaimodel import Timestep
+from .fastercache.models.cogvideox.sgm.modules.diffusionmodules.util import (
     linear,
     timestep_embedding,
 )
