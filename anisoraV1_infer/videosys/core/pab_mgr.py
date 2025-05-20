@@ -1,4 +1,4 @@
-from videosys.utils.logging import logger
+from ...videosys.utils.logging import logger
 
 PAB_MANAGER = None
 

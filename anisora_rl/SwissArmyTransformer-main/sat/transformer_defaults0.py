@@ -81,7 +81,7 @@ def attention_fn_default(query_layer, key_layer, value_layer, attention_mask,
 import sys
 sys.path.append("/DATA/bvac/personal/opensora/zhipu/cogvideox_bilibili-main20240813/sat")
 from sgm.util import get_context_parallel_group as get_sequence_parallel_group
-# from videosys.core.comm import (
+# from ...videosys.core.comm import (
 from cp.comm import (
     all_to_all_with_pad,
     gather_sequence,

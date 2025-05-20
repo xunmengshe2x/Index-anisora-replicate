@@ -12,10 +12,10 @@ from einops import rearrange
 from torch import nn
 from torch.amp import autocast
 
-from videosys.core.comm import all_to_all_with_pad, get_pad, set_pad
-from videosys.core.pab_mgr import enable_pab, if_broadcast_cross, if_broadcast_spatial, if_broadcast_temporal
-from videosys.models.modules.normalization import LlamaRMSNorm, VchitectSpatialNorm
-from videosys.utils.logging import logger
+from ....videosys.core.comm import all_to_all_with_pad, get_pad, set_pad
+from ....videosys.core.pab_mgr import enable_pab, if_broadcast_cross, if_broadcast_spatial, if_broadcast_temporal
+from ....videosys.models.modules.normalization import LlamaRMSNorm, VchitectSpatialNorm
+from ....videosys.utils.logging import logger
 
 
 class OpenSoraAttention(nn.Module):

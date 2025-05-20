@@ -25,9 +25,9 @@ from diffusers.utils.torch_utils import maybe_allow_in_graph
 from einops import rearrange
 from torch import nn
 
-from videosys.core.comm import gather_from_second_dim, set_pad, split_from_second_dim
-from videosys.core.parallel_mgr import ParallelManager
-from videosys.models.modules.attentions import VchitectAttention, VchitectAttnProcessor
+from ....videosys.core.comm import gather_from_second_dim, set_pad, split_from_second_dim
+from ....videosys.core.parallel_mgr import ParallelManager
+from ....videosys.models.modules.attentions import VchitectAttention, VchitectAttnProcessor
 
 
 def _chunked_feed_forward(ff: nn.Module, hidden_states: torch.Tensor, chunk_dim: int, chunk_size: int):

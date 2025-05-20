@@ -11,7 +11,7 @@ from sgm.util import get_context_parallel_world_size as get_sequence_parallel_si
 def enable_sequence_parallel():
     return get_sequence_parallel_size()>1
 
-# from videosys.core.parallel_mgr import get_sequence_parallel_size
+# from ...videosys.core.parallel_mgr import get_sequence_parallel_size
 
 # ======================================================
 # Model

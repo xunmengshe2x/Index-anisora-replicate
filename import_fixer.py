@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""
+Script to automatically convert absolute 'videosys' imports to relative imports
+throughout the codebase.
+
+This script scans Python files for imports starting with 'from videosys' and
+converts them to relative imports based on the file's location in the package
+structure.
+"""
+
+import os
+import re
+import sys
+from pathlib import Path
+
+def count_parent_dirs(file_path, base_dir):
+    """Count how many parent directories to go up for relative imports"""
+    rel_path = os.path.relpath(file_path, base_dir)
+    return len(rel_path.split(os.sep)) - 1
+
+def convert_to_relative_import(import_line, parent_count):
+    """Convert an absolute import to a relative import"""
+    # Extract the module path after 'videosys'
+    match = re.match(r'from\s+videosys(\..+)\s+import\s+(.+)', import_line)
+    if match:
+        module_path, imports = match.groups()
+        # Create the relative import prefix with appropriate number of dots
+        relative_prefix = '.' * parent_count
+        # Construct the new relative import line
+        return f'from {relative_prefix}videosys{module_path} import {imports}'
+    return import_line
+
+def process_file(file_path, base_dir):
+    """Process a single file to convert absolute imports to relative imports"""
+    parent_count = count_parent_dirs(file_path, base_dir)
+    
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except UnicodeDecodeError:
+        try:
+            # Try with latin-1 encoding as fallback
+            with open(file_path, 'r', encoding='latin-1') as f:
+                content = f.read()
+        except Exception as e:
+            print(f"Error reading {file_path}: {e}")
+            return False, 0
+    
+    # Find all 'from videosys' imports
+    pattern = r'from\s+videosys\..+\s+import\s+.+'
+    matches = re.findall(pattern, content)
+    
+    if not matches:
+        return False, 0
+    
+    # Replace each absolute import with its relative equivalent
+    for match in matches:
+        relative_import = convert_to_relative_import(match, parent_count)
+        content = content.replace(match, relative_import)
+    
+    # Write the modified content back to the file
+    try:
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+    except UnicodeEncodeError:
+        # Try with latin-1 encoding as fallback
+        with open(file_path, 'w', encoding='latin-1') as f:
+            f.write(content)
+    
+    return True, len(matches)
+
+def main():
+    if len(sys.argv) < 2:
+        project_root = os.getcwd()
+    else:
+        project_root = sys.argv[1]
+    
+    if not os.path.isdir(project_root):
+        print(f"Error: {project_root} is not a valid directory")
+        sys.exit(1)
+    
+    # Find all Python files in the project
+    python_files = []
+    for root, _, files in os.walk(project_root):
+        for file in files:
+            if file.endswith('.py'):
+                python_files.append(os.path.join(root, file))
+    
+    # Process each file
+    total_files_modified = 0
+    total_imports_modified = 0
+    
+    for file_path in python_files:
+        try:
+            modified, count = process_file(file_path, project_root)
+            if modified:
+                total_files_modified += 1
+                total_imports_modified += count
+                print(f"Modified {count} imports in {file_path}")
+        except Exception as e:
+            print(f"Error processing {file_path}: {e}")
+    
+    print(f"\nSummary: Modified {total_imports_modified} imports across {total_files_modified} files")
+
+if __name__ == "__main__":
+    main()

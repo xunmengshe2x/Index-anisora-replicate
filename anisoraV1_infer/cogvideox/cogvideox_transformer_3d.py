@@ -30,10 +30,10 @@ from diffusers.models.modeling_outputs import Transformer2DModelOutput
 from diffusers.models.modeling_utils import ModelMixin
 from diffusers.models.normalization import AdaLayerNorm, CogVideoXLayerNormZero
 
-from videosys.core.comm import all_to_all_comm, gather_sequence, get_pad, set_pad, split_sequence
-from videosys.core.parallel_mgr import ParallelManager
-from videosys.models.modules.embeddings import apply_rotary_emb
-from videosys.utils.utils import batch_func
+from ..videosys.core.comm import all_to_all_comm, gather_sequence, get_pad, set_pad, split_sequence
+from ..videosys.core.parallel_mgr import ParallelManager
+from ..videosys.models.modules.embeddings import apply_rotary_emb
+from ..videosys.utils.utils import batch_func
 
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name

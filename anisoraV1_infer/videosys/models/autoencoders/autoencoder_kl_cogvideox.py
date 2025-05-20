@@ -22,7 +22,7 @@ from diffusers.models.modeling_outputs import AutoencoderKLOutput
 from diffusers.models.modeling_utils import ModelMixin
 from diffusers.utils.accelerate_utils import apply_forward_hook
 
-from videosys.utils.logging import logger
+from ....videosys.utils.logging import logger
 
 from ..modules.downsampling import CogVideoXDownsample3D
 from ..modules.upsampling import CogVideoXUpsample3D

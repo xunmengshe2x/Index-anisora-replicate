@@ -82,7 +82,7 @@ import sys
 sys.path.append("/DATA/workshop/personal/cogvideox_bilibili-vv_cp_tmp/sat")
 from sgm.util import get_context_parallel_group as get_sequence_parallel_group,get_context_parallel_world_size#,enable_sequence_parallel
 def enable_sequence_parallel():return False
-# from videosys.core.comm import (
+# from ...videosys.core.comm import (
 from cp.comm import (
     all_to_all_with_pad,
     gather_sequence,

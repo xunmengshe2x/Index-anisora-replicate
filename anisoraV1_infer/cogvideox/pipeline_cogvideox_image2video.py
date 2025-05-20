@@ -182,15 +182,15 @@ from diffusers.utils.torch_utils import randn_tensor
 from diffusers.video_processor import VideoProcessor
 from transformers import T5EncoderModel, T5Tokenizer
 
-from videosys.core.pab_mgr import PABConfig, set_pab_manager, update_steps
-from videosys.core.pipeline import VideoSysPipeline, VideoSysPipelineOutput
-from videosys.models.autoencoders.autoencoder_kl_cogvideox import AutoencoderKLCogVideoX
-# from videosys.models.modules.embeddings import get_3d_rotary_pos_embed
-# from videosys.models.transformers.cogvideox_transformer_3d import CogVideoXTransformer3DModel
-from videosys.schedulers.scheduling_ddim_cogvideox import CogVideoXDDIMScheduler
-from videosys.schedulers.scheduling_dpm_cogvideox import CogVideoXDPMScheduler
-from videosys.utils.logging import logger
-from videosys.utils.utils import save_video, set_seed
+from ..videosys.core.pab_mgr import PABConfig, set_pab_manager, update_steps
+from ..videosys.core.pipeline import VideoSysPipeline, VideoSysPipelineOutput
+from ..videosys.models.autoencoders.autoencoder_kl_cogvideox import AutoencoderKLCogVideoX
+# from ..videosys.models.modules.embeddings import get_3d_rotary_pos_embed
+# from ..videosys.models.transformers.cogvideox_transformer_3d import CogVideoXTransformer3DModel
+from ..videosys.schedulers.scheduling_ddim_cogvideox import CogVideoXDDIMScheduler
+from ..videosys.schedulers.scheduling_dpm_cogvideox import CogVideoXDPMScheduler
+from ..videosys.utils.logging import logger
+from ..videosys.utils.utils import save_video, set_seed
 class CogVideoXPABConfig(PABConfig):
     def __init__(
         self,

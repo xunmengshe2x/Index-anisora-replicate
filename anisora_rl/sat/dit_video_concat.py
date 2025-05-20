@@ -20,7 +20,7 @@ from sgm.modules.diffusionmodules.util import (
 from sat.ops.layernorm import LayerNorm, RMSNorm
 from sgm.util import get_context_parallel_group as get_sequence_parallel_group,get_context_parallel_world_size
 def enable_sequence_parallel():return False
-# from videosys.core.comm import (
+# from ..videosys.core.comm import (
 from cp.comm import (
     all_to_all_with_pad,
     gather_sequence,

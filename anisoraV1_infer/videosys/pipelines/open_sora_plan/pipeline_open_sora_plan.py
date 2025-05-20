@@ -24,18 +24,18 @@ from diffusers.schedulers import EulerAncestralDiscreteScheduler, PNDMScheduler
 from diffusers.utils.torch_utils import randn_tensor
 from transformers import AutoTokenizer, MT5EncoderModel, T5EncoderModel, T5Tokenizer
 
-from videosys.core.pab_mgr import PABConfig, set_pab_manager, update_steps
-from videosys.core.pipeline import VideoSysPipeline, VideoSysPipelineOutput
-from videosys.models.autoencoders.autoencoder_kl_open_sora_plan_v110 import (
+from ....videosys.core.pab_mgr import PABConfig, set_pab_manager, update_steps
+from ....videosys.core.pipeline import VideoSysPipeline, VideoSysPipelineOutput
+from ....videosys.models.autoencoders.autoencoder_kl_open_sora_plan_v110 import (
     CausalVAEModelWrapper as CausalVAEModelWrapperV110,
 )
-from videosys.models.autoencoders.autoencoder_kl_open_sora_plan_v120 import (
+from ....videosys.models.autoencoders.autoencoder_kl_open_sora_plan_v120 import (
     CausalVAEModelWrapper as CausalVAEModelWrapperV120,
 )
-from videosys.models.transformers.open_sora_plan_v110_transformer_3d import LatteT2V
-from videosys.models.transformers.open_sora_plan_v120_transformer_3d import OpenSoraT2V
-from videosys.utils.logging import logger
-from videosys.utils.utils import save_video, set_seed
+from ....videosys.models.transformers.open_sora_plan_v110_transformer_3d import LatteT2V
+from ....videosys.models.transformers.open_sora_plan_v120_transformer_3d import OpenSoraT2V
+from ....videosys.utils.logging import logger
+from ....videosys.utils.utils import save_video, set_seed
 
 
 class OpenSoraPlanV110PABConfig(PABConfig):

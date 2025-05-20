@@ -20,8 +20,8 @@ from timm.models.vision_transformer import Mlp
 from torch.utils.checkpoint import checkpoint, checkpoint_sequential
 from transformers import PretrainedConfig, PreTrainedModel
 
-from videosys.core.comm import all_to_all_with_pad, gather_sequence, get_pad, set_pad, split_sequence
-from videosys.core.pab_mgr import (
+from ....videosys.core.comm import all_to_all_with_pad, gather_sequence, get_pad, set_pad, split_sequence
+from ....videosys.core.pab_mgr import (
     enable_pab,
     get_mlp_output,
     if_broadcast_cross,
@@ -30,17 +30,17 @@ from videosys.core.pab_mgr import (
     if_broadcast_temporal,
     save_mlp_output,
 )
-from videosys.core.parallel_mgr import ParallelManager
-from videosys.models.modules.activations import approx_gelu
-from videosys.models.modules.attentions import OpenSoraAttention, OpenSoraMultiHeadCrossAttention
-from videosys.models.modules.embeddings import (
+from ....videosys.core.parallel_mgr import ParallelManager
+from ....videosys.models.modules.activations import approx_gelu
+from ....videosys.models.modules.attentions import OpenSoraAttention, OpenSoraMultiHeadCrossAttention
+from ....videosys.models.modules.embeddings import (
     OpenSoraCaptionEmbedder,
     OpenSoraPatchEmbed3D,
     OpenSoraPositionEmbedding2D,
     SizeEmbedder,
     TimestepEmbedder,
 )
-from videosys.utils.utils import batch_func
+from ....videosys.utils.utils import batch_func
 
 
 def t2i_modulate(x, shift, scale):
