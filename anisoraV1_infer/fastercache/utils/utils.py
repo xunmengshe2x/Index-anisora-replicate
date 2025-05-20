@@ -141,11 +141,18 @@ def _setup_dist_env_from_slurm():
     os.environ["LOCAL_WORLD_SIZE"] = os.environ["SLURM_NTASKS_PER_NODE"]
 
 def init_process_groups():
+    """
+    Initialize the distributed process group, with a check to prevent
+    initializing it twice.
+    """
     if any([
         x not in os.environ
         for x in ["RANK", "WORLD_SIZE", "MASTER_PORT", "MASTER_ADDR"]
     ]):
         _setup_dist_env_from_slurm()
 
-    dist.init_process_group("nccl")
-    torch.cuda.set_device(dist.get_rank() % torch.cuda.device_count())
+    # Add check to prevent initializing twice
+    if not dist.is_initialized():
+        dist.init_process_group("nccl")
+        torch.cuda.set_device(dist.get_rank() % torch.cuda.device_count())
+
