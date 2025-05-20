@@ -13,6 +13,13 @@ original_path = sys.path.copy()
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
+# Add the repository root to Python path to fix the fastercache import issue
+sys.path.append('/src')
+
+# Add the --base argument to sys.argv if it's not already there
+#if '--base' not in sys.argv:
+    #sys.argv.extend(['--base', '/src/anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml'])
+
 # Now do your imports
 from anisoraV1_infer import CVModel
 
