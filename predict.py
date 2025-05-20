@@ -41,7 +41,10 @@ class Predictor:
         os.makedirs("pretrained_models", exist_ok=True)
         os.makedirs("ckpt", exist_ok=True)
         os.makedirs(os.path.join("ckpt", "1000"), exist_ok=True)  # Create 1000 subdirectory
-
+    
+        if not os.path.exists("ckpt"):
+            os.symlink("/src/ckpt", "ckpt")
+        
         # Download T5 encoder and VAE weights
         print("Checking/downloading T5 encoder and VAE weights...")
         self._download_t5_vae()
