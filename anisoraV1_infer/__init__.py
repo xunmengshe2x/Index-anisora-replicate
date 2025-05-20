@@ -28,7 +28,7 @@ class CVModel:
         # 1. cfg and init distributed env
         # ======================================================
         # 超级加倍
-        self.engine = VideoSysEngine(Args(num_gpus=n_gpus))
+        self.engine = VideoSysEngine(Args(num_gpus=n_gpus, base=["/src/anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml"]))
 
     # run 方法, 模型入口
     # resource 为本地地址，支持传入关键字参数
