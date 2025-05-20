@@ -1,24 +1,25 @@
 import os
+import sys
+
+# Store the original path
+original_path = sys.path.copy()
+
+# Add the project root directory to sys.path before any imports
+# This ensures both absolute imports (videosys.utils.logging) 
+# and relative imports (.fastercache_sample_cogvideox_sp) work correctly
+project_root = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, project_root)
+
+# Now do your imports
 import torch
-import sys 
 import requests
 from PIL import Image
 from io import BytesIO
 from huggingface_hub import hf_hub_download, snapshot_download
-# Store the original path
-original_path = sys.path.copy()
-
-# Add the directory containing anisoraV1_infer to the Python path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_dir)
-
-# Now do your imports
 from anisoraV1_infer import CVModel
 
-# Reset the path back to original
-sys.path = original_path
-#from anisoraV1_infer import CVModel
-#from fastercache.datasets.image_transform import center_crop_arr
+# Reset the path back to original if needed
+# sys.path = original_path  # Commented out as we need to keep the path for submodule imports
 
 REPO_ID = "IndexTeam/Index-anisora"
 T5_VAE_DIR = "CogVideoX_VAE_T5"
