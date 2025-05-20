@@ -4,7 +4,8 @@ import torch.distributed as dist
 from ...process_group_mesh import ProcessGroupMesh
 from torch.distributed import ProcessGroup
 
-from videosys.utils.logging import init_dist_logger, logger
+# Change from absolute import to relative import
+from ..utils.logging import init_dist_logger, logger
 
 
 class ParallelManager(ProcessGroupMesh):
