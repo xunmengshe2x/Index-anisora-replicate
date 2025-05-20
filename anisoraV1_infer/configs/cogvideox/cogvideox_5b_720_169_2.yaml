@@ -101,7 +101,7 @@ model:
           ucg_rate: 0.1
           target: fastercache.models.cogvideox.sgm.modules.encoders.modules.FrozenT5Embedder
           params:
-            model_dir: "pretrained_models/t5-v1_1-xxl-fixed"
+            model_dir: "pretrained_models/t5-v1_1-xxl_new"
             max_length: 226
 
   first_stage_config:
