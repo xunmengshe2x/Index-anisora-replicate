@@ -140,7 +140,7 @@ class Predictor:
                     alt_path = os.path.join("/src/ckpt", "1000", "mp_rank_00_model_states.pt")
                     if os.path.exists(alt_path):
                         # Create a symlink to the expected location
-                        if not os.path.exists(os.path.join("ckpt", "mp_rank_00_model_states.pt")):
+                        if not os.path.exists(os.path.join("/src/ckpt", "mp_rank_00_model_states.pt")):
                             os.symlink(
                                 alt_path,
                                 os.path.join("/src/ckpt", "mp_rank_00_model_states.pt")
