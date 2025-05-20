@@ -29,6 +29,7 @@ class Predictor:
         # Create necessary directories if they don't exist
         os.makedirs("pretrained_models", exist_ok=True)
         os.makedirs("ckpt", exist_ok=True)
+        os.makedirs(os.path.join("ckpt", "1000"), exist_ok=True)  # Create 1000 subdirectory
 
         # Download T5 encoder and VAE weights
         print("Checking/downloading T5 encoder and VAE weights...")
@@ -93,9 +94,37 @@ class Predictor:
                 repo_type="model"
             )
             
-            # Verify the file exists
-            if not os.path.exists("ckpt/mp_rank_00_model_states.pt"):
-                raise FileNotFoundError("5B model weights not found after download")
+            # Verify the file exists in the correct subdirectory
+            expected_path = os.path.join("ckpt", MODEL_5B_DIR, "1000", "mp_rank_00_model_states.pt")
+            if os.path.exists(expected_path):
+                # File downloaded to the correct location with subdirectories preserved
+                # Create a symlink to the expected location if needed
+                if not os.path.exists(os.path.join("ckpt", "mp_rank_00_model_states.pt")):
+                    os.symlink(
+                        expected_path,
+                        os.path.join("ckpt", "mp_rank_00_model_states.pt")
+                    )
+            else:
+                # Check if file was downloaded to a flattened path
+                flattened_path = os.path.join("ckpt", "mp_rank_00_model_states.pt")
+                if os.path.exists(flattened_path):
+                    # File exists at flattened path, create the directory structure and move the file
+                    os.makedirs(os.path.dirname(expected_path), exist_ok=True)
+                    os.rename(flattened_path, expected_path)
+                    # Create a symlink back to the original expected location
+                    os.symlink(expected_path, flattened_path)
+                else:
+                    # Check if file was downloaded to 1000 subdirectory directly
+                    alt_path = os.path.join("ckpt", "1000", "mp_rank_00_model_states.pt")
+                    if os.path.exists(alt_path):
+                        # Create a symlink to the expected location
+                        if not os.path.exists(os.path.join("ckpt", "mp_rank_00_model_states.pt")):
+                            os.symlink(
+                                alt_path,
+                                os.path.join("ckpt", "mp_rank_00_model_states.pt")
+                            )
+                    else:
+                        raise FileNotFoundError("5B model weights not found after download")
                 
         except Exception as e:
             raise RuntimeError(f"Failed to download 5B model weights: {str(e)}")
