@@ -1,24 +1,22 @@
 import os
-import sys
-
-# Store the original path
-original_path = sys.path.copy()
-
-# Add the project root directory to sys.path before any imports
-# This ensures both absolute imports (videosys.utils.logging) 
-# and relative imports (.fastercache_sample_cogvideox_sp) work correctly
-project_root = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, project_root)
-
-# Now do your imports
 import torch
+import sys 
 import requests
 from PIL import Image
 from io import BytesIO
 from huggingface_hub import hf_hub_download, snapshot_download
+
+# Store the original path
+original_path = sys.path.copy()
+
+# Add the directory containing anisoraV1_infer to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(current_dir)
+
+# Now do your imports
 from anisoraV1_infer import CVModel
 
-# Reset the path back to original if needed
+# Reset the path back to original
 # sys.path = original_path  # Commented out as we need to keep the path for submodule imports
 
 REPO_ID = "IndexTeam/Index-anisora"
@@ -56,16 +54,30 @@ class Predictor:
                 ignore_patterns=["*.md", "*.txt"]
             )
             
-            # Verify critical files exist
+            # Verify critical files exist - FIXED: Check in the correct subdirectory
             required_files = [
-                "t5-v1_1-xxl_new",
-                "videokl_ch16_long_20w.pt"
+                os.path.join(T5_VAE_DIR, "t5-v1_1-xxl_new"),
+                os.path.join(T5_VAE_DIR, "videokl_ch16_long_20w.pt")
             ]
             
             for file in required_files:
                 full_path = os.path.join("pretrained_models", file)
                 if not os.path.exists(full_path):
                     raise FileNotFoundError(f"Required file {file} not found after download")
+                
+            # Create symlinks to the expected locations if needed
+            # This ensures compatibility with the model code that might expect files in specific locations
+            if not os.path.exists("pretrained_models/t5-v1_1-xxl_new"):
+                os.symlink(
+                    os.path.join("pretrained_models", T5_VAE_DIR, "t5-v1_1-xxl_new"),
+                    "pretrained_models/t5-v1_1-xxl_new"
+                )
+                
+            if not os.path.exists("pretrained_models/videokl_ch16_long_20w.pt"):
+                os.symlink(
+                    os.path.join("pretrained_models", T5_VAE_DIR, "videokl_ch16_long_20w.pt"),
+                    "pretrained_models/videokl_ch16_long_20w.pt"
+                )
                 
         except Exception as e:
             raise RuntimeError(f"Failed to download T5/VAE weights: {str(e)}")
