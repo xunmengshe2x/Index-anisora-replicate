@@ -41,7 +41,7 @@ class Predictor:
 
         # Initialize the model
         print("Initializing model...")
-        self.model = CVModel(n_gpus=1, base=["anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml"])
+        self.model = CVModel(n_gpus=1, base=["/src/anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml"])
 
     def _download_t5_vae(self):
         """Download T5 encoder and VAE weights if not present"""
