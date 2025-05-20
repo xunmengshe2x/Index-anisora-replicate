@@ -54,6 +54,5 @@ build:
     
   run:
     - PYTHONPATH=$PYTHONPATH:/src
-    - pip install -e .  # This will install your local package in editable mode
 
 predict: "predict.py:Predictor"
