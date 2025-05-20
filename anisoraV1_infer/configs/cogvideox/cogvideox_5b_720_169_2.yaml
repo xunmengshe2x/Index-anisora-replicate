@@ -108,7 +108,7 @@ model:
     target: fastercache.models.cogvideox.vae_modules.autoencoder.VideoAutoencoderInferenceWrapper
     params:
       cp_size: 1
-      ckpt_path: "/src/pretrained_models/3d-vae.pt"
+      ckpt_path: "/src/pretrained_models/videokl_ch16_long_20w.pt"
       ignore_keys: [ 'loss' ]
 
       loss_config:
