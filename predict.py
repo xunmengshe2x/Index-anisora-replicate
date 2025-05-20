@@ -95,8 +95,11 @@ class Predictor:
             raise RuntimeError(f"Failed to download T5/VAE weights: {str(e)}")
 
     def _download_5b_weights(self):
-        """Download 5B model weights if not present"""
+        """Download 5B model weights and metadata files if not present"""
         try:
+            # Create the base directory structure
+            os.makedirs("/src/ckpt", exist_ok=True)
+            
             # Download the 5B weights
             hf_hub_download(
                 repo_id=REPO_ID,
@@ -105,7 +108,15 @@ class Predictor:
                 repo_type="model"
             )
             
-            # Verify the file exists in the correct subdirectory
+            # Download the 'latest' metadata file
+            hf_hub_download(
+                repo_id=REPO_ID,
+                filename=f"{MODEL_5B_DIR}/latest",
+                local_dir="/src/ckpt",
+                repo_type="model"
+            )
+            
+            # Verify the model weights file exists in the correct subdirectory
             expected_path = os.path.join("/src/ckpt", MODEL_5B_DIR, "1000", "mp_rank_00_model_states.pt")
             if os.path.exists(expected_path):
                 # File downloaded to the correct location with subdirectories preserved
@@ -136,9 +147,31 @@ class Predictor:
                             )
                     else:
                         raise FileNotFoundError("5B model weights not found after download")
-                
+            
+            # Verify and handle the 'latest' metadata file
+            expected_latest_path = os.path.join("/src/ckpt", MODEL_5B_DIR, "latest")
+            if os.path.exists(expected_latest_path):
+                # Create a symlink to the expected location if needed
+                if not os.path.exists(os.path.join("/src/ckpt", "latest")):
+                    os.symlink(
+                        expected_latest_path,
+                        os.path.join("/src/ckpt", "latest")
+                    )
+            else:
+                # Check if file was downloaded to a flattened path
+                flattened_latest_path = os.path.join("/src/ckpt", "latest")
+                if os.path.exists(flattened_latest_path):
+                    # File exists at flattened path, create the directory structure and move the file
+                    os.makedirs(os.path.dirname(expected_latest_path), exist_ok=True)
+                    os.rename(flattened_latest_path, expected_latest_path)
+                    # Create a symlink back to the original expected location
+                    os.symlink(expected_latest_path, flattened_latest_path)
+                else:
+                    raise FileNotFoundError("Latest metadata file not found after download")
+                    
         except Exception as e:
-            raise RuntimeError(f"Failed to download 5B model weights: {str(e)}")
+            raise RuntimeError(f"Failed to download 5B model weights or metadata: {str(e)}")
+
 
     def _process_image(self, image_path: str, target_size: int = 720) -> str:
         """Process input image - either URL or local path"""
