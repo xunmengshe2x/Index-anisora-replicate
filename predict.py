@@ -6,19 +6,23 @@ from PIL import Image
 from io import BytesIO
 from huggingface_hub import hf_hub_download, snapshot_download
 
+# Add the repository root to Python path BEFORE any imports
+# This ensures all modules can be found during dynamic imports
+sys.path.insert(0, '/src')
+
 # Store the original path
 original_path = sys.path.copy()
 
 # Add the directory containing anisoraV1_infer to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_dir)
-
-# Add the repository root to Python path to fix the fastercache import issue
-sys.path.append('/src')
+sys.path.insert(0, current_dir)
 
 # Add the --base argument to sys.argv if it's not already there
-#if '--base' not in sys.argv:
-    #sys.argv.extend(['--base', '/src/anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml'])
+if '--base' not in sys.argv:
+    sys.argv.extend(['--base', '/src/anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml'])
+
+# Print sys.path for debugging
+print("DEBUG: sys.path at startup:", sys.path)
 
 # Now do your imports
 from anisoraV1_infer import CVModel
