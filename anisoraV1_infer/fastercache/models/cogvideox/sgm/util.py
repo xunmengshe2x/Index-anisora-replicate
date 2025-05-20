@@ -1,6 +1,7 @@
 import functools
 import importlib
 import os
+import sys
 from functools import partial
 from inspect import isfunction
 
@@ -258,17 +259,62 @@ def instantiate_from_config(config, **extra_kwargs):
         elif config == "__is_unconditional__":
             return None
         raise KeyError("Expected key `target` to instantiate.")
-    return get_obj_from_str(config["target"])(**config.get("params", dict()), **extra_kwargs)
+    
+    # PATCHED: Print target and sys.path for debugging
+    print(f"DEBUG: Trying to instantiate {config['target']}")
+    print(f"DEBUG: Current sys.path: {sys.path}")
+    
+    # PATCHED: Handle fastercache imports specially
+    target = config["target"]
+    if target.startswith("fastercache."):
+        # Try to handle relative imports for fastercache
+        try:
+            # First try the original way
+            return get_obj_from_str(target)(**config.get("params", dict()), **extra_kwargs)
+        except ModuleNotFoundError as e:
+            print(f"DEBUG: Original import failed with: {str(e)}")
+            
+            # If that fails, try to modify the import path
+            if target.startswith("fastercache."):
+                # Try with anisoraV1_infer prefix
+                modified_target = "anisoraV1_infer." + target
+                print(f"DEBUG: Trying modified target: {modified_target}")
+                try:
+                    return get_obj_from_str(modified_target)(**config.get("params", dict()), **extra_kwargs)
+                except Exception as e2:
+                    print(f"DEBUG: Modified import also failed with: {str(e2)}")
+                    raise e  # Re-raise the original error if the modified import also fails
+    
+    # Original behavior for non-fastercache imports
+    return get_obj_from_str(target)(**config.get("params", dict()), **extra_kwargs)
 
 
 def get_obj_from_str(string, reload=False, invalidate_cache=True):
+    # PATCHED: Print the string being imported for debugging
+    print(f"DEBUG: Importing {string}")
+    
     module, cls = string.rsplit(".", 1)
     if invalidate_cache:
         importlib.invalidate_caches()
     if reload:
         module_imp = importlib.import_module(module)
         importlib.reload(module_imp)
-    return getattr(importlib.import_module(module, package=None), cls)
+    
+    # PATCHED: Try to handle fastercache imports specially
+    try:
+        return getattr(importlib.import_module(module, package=None), cls)
+    except ModuleNotFoundError as e:
+        if module.startswith("fastercache"):
+            # Try with anisoraV1_infer prefix
+            try:
+                modified_module = "anisoraV1_infer." + module
+                print(f"DEBUG: Trying modified module: {modified_module}")
+                return getattr(importlib.import_module(modified_module, package=None), cls)
+            except Exception as e2:
+                print(f"DEBUG: Modified module import also failed with: {str(e2)}")
+                raise e  # Re-raise the original error if the modified import also fails
+        else:
+            raise  # Re-raise the original error for non-fastercache imports
 
 
 def append_zero(x):
