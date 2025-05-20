@@ -67,7 +67,25 @@ def get_args(args_list=None, parser=None):
 
     parser = deepspeed.add_config_arguments(parser)
 
-    args = parser.parse_args(args_list)
+    # FIXED: Use parse_known_args instead of parse_args to ignore unrecognized arguments
+    if args_list is not None:
+        # Filter out Replicate-specific arguments
+        filtered_args = []
+        skip_next = False
+        for i, arg in enumerate(args_list):
+            if skip_next:
+                skip_next = False
+                continue
+            if arg.startswith("--await-explicit-shutdown") or arg.startswith("--upload-url"):
+                if "=" not in arg:  # If the format is --arg value (not --arg=value)
+                    skip_next = True
+                continue
+            filtered_args.append(arg)
+        
+        args, _ = parser.parse_known_args(filtered_args)
+    else:
+        args, _ = parser.parse_known_args()
+        
     args = process_config_to_args(args)
 
     if not args.train_data:
@@ -219,7 +237,7 @@ def initialize_distributed(args):
     mpu.initialize_model_parallel(args.model_parallel_size)
 
     # Set vae context parallel group equal to model parallel group
-    from ....fastercache.models.cogvideox.sgm.util import set_context_parallel_group, initialize_context_parallel
+    from fastercache.models.cogvideox.sgm.util import set_context_parallel_group, initialize_context_parallel
 
     if args.model_parallel_size <= 2:
         set_context_parallel_group(args.model_parallel_size, mpu.get_model_parallel_group())
@@ -279,4 +297,3 @@ def process_config_to_args(args):
         args.data_config = data_config
 
     return args
-
