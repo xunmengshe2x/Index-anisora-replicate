@@ -624,7 +624,15 @@ class child():
         py_parser = argparse.ArgumentParser(add_help=False)
         known, args_list = py_parser.parse_known_args()
 
+        #args = get_args(args_list)
+        # To this:
+        if args_list is None:
+            args_list = []
+        if not any('--base' in arg for arg in args_list):
+            args_list.extend(['--base', '/src/anisoraV1_infer/configs/cogvideox/cogvideox_5b_720_169_2.yaml'])
         args = get_args(args_list)
+
+        
         args = argparse.Namespace(**vars(args), **vars(known))
         del args.deepspeed_config
         args.model_config.first_stage_config.params.cp_size = 1
