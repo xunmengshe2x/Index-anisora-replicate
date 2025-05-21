@@ -657,9 +657,9 @@ class child():
 
         # Before calling load_checkpoint
         if hasattr(args, 'load'):
-            args.load = '/src/ckpt'
+            args.load = '/src/ckpt/5B'
         elif isinstance(args, dict) and 'load' in args:
-            args['load'] = '/src/ckpt'
+            args['load'] = '/src/ckpt/5B'
         
         #print('here is the checkpoint model', model)
         print('here is the args', args)
