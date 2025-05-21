@@ -288,6 +288,13 @@ def load_checkpoint(model, args, load_path=None, prefix='', specific_iteration=N
     print_all('global rank {} is loading checkpoint {}'.format(
         torch.distributed.get_rank(), checkpoint_name))
 
+    # Ensure checkpoint_name uses absolute path
+    if not os.path.isabs(checkpoint_name) and checkpoint_name.startswith('ckpt/'):
+        original_path = checkpoint_name
+        checkpoint_name = os.path.join('/src', checkpoint_name)
+        print(f"Modified checkpoint path from {original_path} to {checkpoint_name}")
+
+    
     # load state_dict into CPU
     sd = torch.load(checkpoint_name, map_location='cpu')
 
