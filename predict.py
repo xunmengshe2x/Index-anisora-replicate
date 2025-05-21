@@ -37,47 +37,19 @@ MODEL_5B_DIR = "5B"
 class Predictor:
     def setup(self):
         """Load the model into memory and ensure all required weights are present"""
-        # Print current working directory for debugging
-        print(f"Current working directory: {os.getcwd()}")
-        
-        # Remove existing directories to start clean
-        if os.path.exists("ckpt"):
-            print("Removing existing ckpt directory")
-            import shutil
-            shutil.rmtree("ckpt")
-        
         # Create necessary directories if they don't exist
         os.makedirs("pretrained_models", exist_ok=True)
-        os.makedirs("/src/ckpt", exist_ok=True)
-        os.makedirs(os.path.join("/src/ckpt", "1000"), exist_ok=True)
-        
-        # Create symlink from current working directory to /src/ckpt
-        # This ensures relative paths in the model code can find the files
-        print("Creating symlink from ckpt to /src/ckpt")
-        if os.path.exists("ckpt"):
-            os.remove("ckpt")  # Remove if it exists but isn't a proper symlink
-        os.symlink("/src/ckpt", "ckpt")
-        
-        # Verify symlink was created correctly
-        if os.path.islink("ckpt"):
-            print(f"Symlink created successfully. ckpt -> {os.readlink('ckpt')}")
-        else:
-            print("Failed to create symlink!")
-        
+        os.makedirs("ckpt", exist_ok=True)
+        os.makedirs(os.path.join("ckpt", "1000"), exist_ok=True)  # Create 1000 subdirectory
+
         # Download T5 encoder and VAE weights
         print("Checking/downloading T5 encoder and VAE weights...")
         self._download_t5_vae()
-    
+
         # Download 5B model weights
         print("Checking/downloading 5B model weights...")
         self._download_5b_weights()
-        
-        # Verify files exist in both locations
-        src_path = "/src/ckpt/1000/mp_rank_00_model_states.pt"
-        symlink_path = "ckpt/1000/mp_rank_00_model_states.pt"
-        print(f"Checking if file exists at {src_path}: {os.path.exists(src_path)}")
-        print(f"Checking if file exists at {symlink_path}: {os.path.exists(symlink_path)}")
-        
+
         # Initialize the model
         print("Initializing model...")
         self.model = CVModel(n_gpus=1)
