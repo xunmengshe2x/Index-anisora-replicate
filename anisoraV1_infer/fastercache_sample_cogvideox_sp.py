@@ -652,7 +652,16 @@ class child():
             model = get_model(args, model_cls)
         else:
             model = model_cls
-        print('here is the checkpoint model', model)
+
+
+
+        # Before calling load_checkpoint
+        if hasattr(args, 'load'):
+            args.load = '/src/ckpt'
+        elif isinstance(args, dict) and 'load' in args:
+            args['load'] = '/src/ckpt'
+        
+        #print('here is the checkpoint model', model)
         print('here is the args', args)
         load_checkpoint(model, args)
         model.eval()
