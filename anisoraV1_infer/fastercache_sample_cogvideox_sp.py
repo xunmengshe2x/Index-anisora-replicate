@@ -652,7 +652,8 @@ class child():
             model = get_model(args, model_cls)
         else:
             model = model_cls
-
+        print('here is the checkpoint model', model)
+        print('here is the args', args)
         load_checkpoint(model, args)
         model.eval()
         set_seed(554)
