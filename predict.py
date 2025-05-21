@@ -208,7 +208,7 @@ class Predictor:
         motion: float = 0.7,
         gen_len: str = "3",
         seed: int = 554,
-    ) -> str:
+    ) -> dict:  # Changed return type to dict
         """Run a single prediction on the model"""
         
         try:
@@ -243,16 +243,37 @@ class Predictor:
             if not os.path.exists(output_path):
                 raise RuntimeError("Output video was not generated")
                 
-            return output_path
+            # Return a dictionary with the path - this enables the download button in Replicate
+            return {"video": output_path}
 
         except Exception as e:
             raise RuntimeError(f"Prediction failed: {str(e)}")
 
     def cleanup(self):
-        """Clean up temporary files"""
+        """Clean up temporary files and free GPU memory"""
         try:
+            # Clean up temporary files
             for file in os.listdir("/tmp"):
                 if file.endswith((".jpg", ".png", ".mp4")):
                     os.remove(os.path.join("/tmp", file))
+                    
+            # Free GPU memory
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                
+                # For more aggressive cleanup (optional)
+                for i in range(torch.cuda.device_count()):
+                    with torch.cuda.device(i):
+                        torch.cuda.empty_cache()
+                        
+            # If you have a reference to the model, you can also delete it
+            if hasattr(self, 'model'):
+                del self.model
+                self.model = None
+                
+            # Force garbage collection
+            import gc
+            gc.collect()
+                
         except Exception as e:
-            print(f"Warning: Failed to cleanup temporary files: {str(e)}")
+            print(f"Warning: Failed to cleanup resources: {str(e)}")
